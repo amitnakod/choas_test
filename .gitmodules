@@ -1,0 +1,4 @@
+[submodule "ansible-controlled-failure-injectors"]
+	path = ansible-controlled-failure-injectors
+	url = git@github.ibm.com:schematics-solution/ansible-controlled-failure-injectors.git
+	branch = master
