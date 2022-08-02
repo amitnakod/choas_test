@@ -1,0 +1,30 @@
+---
+- name: Running pre-task
+  hosts: localhost
+
+  #Execute before tasks
+  pre_tasks:
+  - set_fact:
+      # Making varaible values accessible across repo
+      zip_path: /tmp/kubeConfig-{{ cluster_id }}.zip
+      kube_config_path: /tmp/kubeConfig-{{ cluster_id }}
+      IC_IAM_TOKEN: "{{ lookup('env','IC_IAM_TOKEN') }}"
+      IC_IAM_REFRESH_TOKEN: "{{ lookup('env','IC_IAM_REFRESH_TOKEN') }}"
+      k8s_namespace: "orchestrate"
+
+
+  - name: install pre-requisites
+    pip:
+      name:
+        - openshift
+        - pyyaml
+        - kubernetes
+        - jsonpatch
+        - jmespath
+      extra_args: --user
+      state: present
+
+- name: Make all kubernetes pod down
+  hosts: localhost
+  roles:
+    - role: sequential_pod_failure

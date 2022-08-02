@@ -1,0 +1,24 @@
+---
+- name: Running pre-task
+  hosts: localhost
+
+  #Execute before tasks
+  pre_tasks:
+  - set_fact:
+      # Making varaible values accessible across repo
+      zip_path: /tmp/kubeConfig-{{ cluster_id }}.zip
+      kube_config_path: /tmp/kubeConfig-{{ cluster_id }}
+      IC_IAM_TOKEN: "{{ lookup('env','IC_IAM_TOKEN') }}"
+      IC_IAM_REFRESH_TOKEN: "{{ lookup('env','IC_IAM_REFRESH_TOKEN') }}"
+      k8s_namespace: "orchestrate"
+
+  - name: Install k8s module
+    pip:
+      name: k8s
+      extra_args: --user
+      state: present
+
+- name: Make all kubernetes pod down
+  hosts: localhost
+  roles:
+    - role: simultaneous_pod_failure
